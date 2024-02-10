@@ -1,0 +1,91 @@
+create database outek;
+use outek;
+
+CREATE TABLE tblRol(
+RolId INT NOT NULL,
+RolDenominacion VARCHAR(45),
+PRIMARY KEY(RolId));
+
+CREATE TABLE tblMetodoPago(
+MetId INT NOT NULL,
+MetDenominacion VARCHAR(45),
+PRIMARY KEY(MetId));
+
+CREATE TABLE tblCategoria(
+CatId INT NOT NULL,
+CatDenominacion VARCHAR(45),
+PRIMARY KEY(CatId));
+
+CREATE TABLE tblUsuario (
+UsuCedula INT NOT NULL,
+UsuNombre VARCHAR(45) NOT NULL,
+UsuApellido VARCHAR(45) NOT NULL,
+UsuTelefono VARCHAR(45) NOT NULL,
+UsuCorreo VARCHAR(45) NOT NULL,
+UsuDireccion VARCHAR(45) NOT NULL,
+UsuPassword VARCHAR(45) NOT NULL,
+UsuEstado ENUM('Activo', 'Inactivo') DEFAULT 'Activo',
+UsuRolId INT NOT NULL,
+PRIMARY KEY (UsuCedula),
+CONSTRAINT Usuario_fkRol FOREIGN KEY (UsuRolId) REFERENCES tblRol(RolId));
+
+
+CREATE TABLE tblProducto (
+ProId INT NOT NULL,
+ProModelo VARCHAR(45) NOT NULL,
+ProDescripcion VARCHAR(1000) NOT NULL,
+ProNombre VARCHAR(45) NOT NULL,
+ProPrecioVenta DOUBLE NOT NULL,
+ProCantidad INT NOT NULL,
+ProImagen VARCHAR(1000) NOT NULL,
+ProEstado ENUM('Activo', 'Inactivo') DEFAULT 'Activo',
+ProCat INT NOT NULL,
+PRIMARY KEY (ProId),
+CONSTRAINT Producto_fkCategoria FOREIGN KEY (ProCat) REFERENCES tblcategoria(CatId));
+
+
+
+CREATE TABLE tblPedido (
+PedId INT NOT NULL,
+PedFecha DATE NOT NULL,
+PedDescripcion VARCHAR(150) NOT NULL,
+PedEstado ENUM('Activo', 'Inactivo') DEFAULT 'Activo',
+tblusuario_UsuCedula INT NOT NULL,
+PedMetodo INT NOT NULL,
+PRIMARY KEY (PedId),
+CONSTRAINT Pedido_fkusuario FOREIGN KEY (tblusuario_UsuCedula) REFERENCES tblUsuario(UsuCedula),
+CONSTRAINT Pedido_fkMetodoPago FOREIGN KEY (PedMetodo) REFERENCES tblmetodopago(MetId));
+
+CREATE TABLE tblDetallepedido (
+DetId INT NOT NULL,
+DetPrecio DOUBLE NOT NULL,
+DetCantidad INT NOT NULL,
+DetPrecioTotal DOUBLE NOT NULL,
+tblpedido_PedId INT NOT NULL,
+tblproducto_ProId INT NOT NULL,
+PRIMARY KEY (DetId, tblpedido_PedId, tblproducto_ProId),
+CONSTRAINT Detallepedido_fkpedido FOREIGN KEY (tblpedido_PedId) REFERENCES tblPedido(PedId),
+CONSTRAINT Detallepedido_fkproducto FOREIGN KEY (tblproducto_ProId) REFERENCES tblProducto(ProId));
+
+Insert into tblRol(RolId, RolDenominacion)values(1, "Cliente");
+Insert into tblRol(RolId, RolDenominacion)values(2, "Administrador");
+Insert into tblRol(RolId, RolDenominacion)values(3, "Personal De Ventas");
+
+Insert into tblMetodoPago(MetId, MetDenominacion)values(1, "Debito");
+Insert into tblMetodoPago(MetId, MetDenominacion)values(2, "Credito");
+
+Insert into tblCategoria(CatId, CatDenominacion)values(1, "Procesadores");
+Insert into tblCategoria(CatId, CatDenominacion)values(2, "Motherboards");
+Insert into tblCategoria(CatId, CatDenominacion)values(3, "Memorias RAM");
+Insert into tblCategoria(CatId, CatDenominacion)values(4, "Tarjetas De Video");
+Insert into tblCategoria(CatId, CatDenominacion)values(5, "Discos Duros");
+Insert into tblCategoria(CatId, CatDenominacion)values(6, "Fuentes");
+Insert into tblCategoria(CatId, CatDenominacion)values(7, "Gabinetes");
+Insert into tblCategoria(CatId, CatDenominacion)values(8, "Diademas");
+Insert into tblCategoria(CatId, CatDenominacion)values(9, "Mouse");
+Insert into tblCategoria(CatId, CatDenominacion)values(10, "Teclados");
+Insert into tblCategoria(CatId, CatDenominacion)values(11, "Refrigeracion");
+Insert into tblCategoria(CatId, CatDenominacion)values(12, "Monitores");
+Insert into tblCategoria(CatId, CatDenominacion)values(13, "Sillas Gamer");
+
+Insert into tblUsuario(UsuCedula, UsuNombre, UsuApellido, UsuTelefono, UsuCorreo, UsuDireccion, UsuPassword, UsuEstado, UsuRolId)values(1010840530, "Juan", "Ome", "3044127844", "technology@gmail.com", "Kr20", "adsi", 'Activo', 2);
